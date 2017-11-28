@@ -3,7 +3,7 @@ title: Qiqi's Blog
 SEOTitle: 琪琪的博客 | Qiqi's Blog
 email: qiqiapink@gmail.com
 header-img: img/post-bg-rwd.jpg
-description: "Too young too simple."
+description: "Too young too simple"
 keyword: "Qiqi, Qiqi Blog, 琪琪的博客"
 url: "http://qiqiapink.github.io"          # your host, for absolute URL
 baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
@@ -11,7 +11,7 @@ github_repo: "https://github.com/qiqiApink/qiqiApink.github.io.git" # you code r
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "Goals determine what you going to be"
+sidebar-about-description: "Goals determine what you going to be!"
 sidebar-avatar:      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
