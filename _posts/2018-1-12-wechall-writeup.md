@@ -4,7 +4,7 @@ title: We Chall Writeup
 date: 2018-1-12
 author: Qiqi
 catlog: true
-header-img: img/write-up的副本.png
+header-img: img/write-up.png
 catalog: true
 tag:
    - write up
