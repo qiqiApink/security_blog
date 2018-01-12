@@ -302,3 +302,33 @@ php中如果switch是数字类型的case的判断时，switch会将其中的参�
 其中md5(1) == c4ca4238a0b923820dcc509a6f75849b
 
 成功绕过判断
+
+
+
+## Training: Register Globals
+
+还是看一下源码
+
+```php
+if (isset($login))
+{
+        echo GWF_HTML::message('Register Globals', $chall->lang('msg_welcome_back', array(htmlspecialchars($login[0]), htmlspecialchars($login[1]))));
+        if (strtolower($login[0]) === 'admin') {
+                $chall->onChallengeSolved(GWF_Session::getUserID());
+        }
+}
+```
+
+注意到只需要满足$login[0] == admin就可以了，所以我们在url上加上?login[0]=admin即可
+
+
+
+## Training: Math Pyramid
+
+这题真的坑，出题人太坏了，故意给出sqrt来误导你，其实这题十分简单，就是a^3/18^.5
+
+
+
+##Training: LSB 
+
+直接上神器Stegsolve，看一下各个通道就能找到答案
