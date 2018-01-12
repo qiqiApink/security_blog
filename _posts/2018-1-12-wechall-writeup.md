@@ -208,7 +208,7 @@ http://www.wechall.net/challenge/no_escape/index.php?vote_for=bill`=111--+
 
 ## Training: PHP LFI
 
-这是一道php文件包含漏洞的题，<a href=https://en.wikipedia.org/wiki/File_inclusion_vulnerability>LFI vulnerability</a>
+这是一道php文件包含漏洞的题，<a href='https://en.wikipedia.org/wiki/File_inclusion_vulnerability'>LFI vulnerability</a>
 
 ```php
 1 $filename = 'pages/'.(isset($_GET["file"])?$_GET["file"]:"welcome").'.html';
@@ -257,9 +257,9 @@ php中如果switch是数字类型的case的判断时，switch会将其中的参�
 
 ## Training: Crypto - Substitution I
 
-替换密码，<a href=https://en.wikipedia.org/wiki/Substitution_cipher>Substitution cipher</a>
+替换密码，<a href='https://en.wikipedia.org/wiki/Substitution_cipher'>Substitution cipher</a>
 
-直接上在线工具就好，<a href=https://quipqiup.com/>quipquip</a>
+直接上在线工具就好，<a href='https://quipqiup.com/'>quipquip</a>
 
 
 
