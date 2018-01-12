@@ -329,6 +329,6 @@ if (isset($login))
 
 
 
-##Training: LSB 
+## Training: LSB 
 
 直接上神器Stegsolve，看一下各个通道就能找到答案
