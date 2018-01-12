@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Wechall WriteUp
+title: We Chall WriteUp
 date: 2018-1-12
 author: Qiqi
 catlog: true
@@ -10,7 +10,7 @@ tag:
    - write up
 ---
 
-# We Chall WriteUp
+# Wechall WriteUp
 
 本人特别菜，刚刚入门不久，无意中发现了这个国外的网站，感觉题目很有意思，可以学到不少东西，wp持续更新
 
