@@ -332,3 +332,25 @@ if (isset($login))
 ## Training: LSB 
 
 直接上神器Stegsolve，看一下各个通道就能找到答案
+
+
+
+## Stegano Attachment
+
+链接打开是一张图片，不管先扔到binwalk下看看`binwalk attachment.jpg`
+
+发现
+
+```
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             JPEG image data, JFIF standard 1.01
+20230         0x4F06          Zip archive data, at least v2.0 to extract, compressed size: 12, uncompressed size: 12, name: solution.txt
+20342         0x4F76          End of Zip archive
+```
+
+从偏移量为20230开始，隐藏了一个zip压缩包
+
+分离一下`dd if=attachment.jpg of=solution.zip skip=20230 bs=1`
+
+打开压缩包，有一个叫`solution.txt`的文件，打开就是答案
