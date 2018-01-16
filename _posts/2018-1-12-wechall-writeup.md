@@ -354,3 +354,32 @@ DECIMAL       HEXADECIMAL     DESCRIPTION
 分离一下`dd if=attachment.jpg of=solution.zip skip=20230 bs=1`
 
 打开压缩包，有一个叫`solution.txt`的文件，打开就是答案
+
+
+
+## Training: Crypto - Caesar II
+
+```
+0B 33 33 28 20 2E 33 26 70 20 3D 33 39 20 37 33
+30 3A 29 28 20 33 32 29 20 31 33 36 29 20 27 2C
+25 30 30 29 32 2B 29 20 2D 32 20 3D 33 39 36 20
+2E 33 39 36 32 29 3D 72 20 18 2C 2D 37 20 33 32
+29 20 3B 25 37 20 2A 25 2D 36 30 3D 20 29 25 37
+3D 20 38 33 20 27 36 25 27 2F 72 20 1B 25 37 32
+6B 38 20 2D 38 03 20 75 76 7C 20 2F 29 3D 37 20
+2D 37 20 25 20 35 39 2D 38 29 20 37 31 25 30 30
+20 2F 29 3D 37 34 25 27 29 70 20 37 33 20 2D 38
+20 37 2C 33 39 30 28 32 6B 38 20 2C 25 3A 29 20
+38 25 2F 29 32 20 3D 33 39 20 38 33 33 20 30 33
+32 2B 20 38 33 20 28 29 27 36 3D 34 38 20 38 2C
+2D 37 20 31 29 37 37 25 2B 29 72 20 1B 29 30 30
+20 28 33 32 29 70 20 3D 33 39 36 20 37 33 30 39
+38 2D 33 32 20 2D 37 20 26 36 33 2B 36 36 32 26
+36 2A 2A 28 72
+```
+
+16进制转字符后，在ASCII码范围内解密，从中找到长得像答案的
+
+```
+Good\job,\you\solved\one\more\challenge\in\your\journey.\This\one\was\fairly\easy\to\crack.\Wasn't\it?\128\keys\is\a\quite\small\keyspace,\so\it\shouldn't\have\taken\you\too\long\to\decrypt\this\message.\Well\done,\your\solution\is\brogrrnbrffd.
+```
