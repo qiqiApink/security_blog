@@ -7,8 +7,7 @@ catlog: true
 header-img: img/write-up.png
 catalog: true
 tag:
-   - write up
-   - Web安全
+   - write up
 ---
 
 # We Chall WriteUp
