@@ -1,16 +1,17 @@
 ---
 layout: post
-title: We Chall Writeup
+title: Wechall WriteUp
 date: 2018-1-12
 author: Qiqi
 catlog: true
-header-img: img/write-up的副本.png
+header-img: img/write-up.png
 catalog: true
 tag:
    - write up
+   - Web安全
 ---
 
-# We Chall Writeup
+# We Chall WriteUp
 
 本人特别菜，刚刚入门不久，无意中发现了这个国外的网站，感觉题目很有意思，可以学到不少东西，wp持续更新
 
@@ -208,7 +209,7 @@ http://www.wechall.net/challenge/no_escape/index.php?vote_for=bill`=111--+
 
 ## Training: PHP LFI
 
-这是一道php文件包含漏洞的题，<a href=https://en.wikipedia.org/wiki/File_inclusion_vulnerability>LFI vulnerability</a>
+这是一道php文件包含漏洞的题，<a href='https://en.wikipedia.org/wiki/File_inclusion_vulnerability'>LFI vulnerability</a>
 
 ```php
 1 $filename = 'pages/'.(isset($_GET["file"])?$_GET["file"]:"welcome").'.html';
@@ -257,9 +258,9 @@ php中如果switch是数字类型的case的判断时，switch会将其中的参�
 
 ## Training: Crypto - Substitution I
 
-替换密码，<a href=https://en.wikipedia.org/wiki/Substitution_cipher>Substitution cipher</a>
+替换密码，<a href='https://en.wikipedia.org/wiki/Substitution_cipher'>Substitution cipher</a>
 
-直接上在线工具就好，<a href=https://quipqiup.com/>quipquip</a>
+直接上在线工具就好，<a href='https://quipqiup.com/'>quipquip</a>
 
 
 
@@ -302,3 +303,84 @@ php中如果switch是数字类型的case的判断时，switch会将其中的参�
 其中md5(1) == c4ca4238a0b923820dcc509a6f75849b
 
 成功绕过判断
+
+
+
+## Training: Register Globals
+
+还是看一下源码
+
+```php
+if (isset($login))
+{
+        echo GWF_HTML::message('Register Globals', $chall->lang('msg_welcome_back', array(htmlspecialchars($login[0]), htmlspecialchars($login[1]))));
+        if (strtolower($login[0]) === 'admin') {
+                $chall->onChallengeSolved(GWF_Session::getUserID());
+        }
+}
+```
+
+注意到只需要满足$login[0] == admin就可以了，所以我们在url上加上?login[0]=admin即可
+
+
+
+## Training: Math Pyramid
+
+这题真的坑，出题人太坏了，故意给出sqrt来误导你，其实这题十分简单，就是a^3/18^.5
+
+
+
+## Training: LSB 
+
+直接上神器Stegsolve，看一下各个通道就能找到答案
+
+
+
+## Stegano Attachment
+
+链接打开是一张图片，不管先扔到binwalk下看看`binwalk attachment.jpg`
+
+发现
+
+```
+DECIMAL       HEXADECIMAL     DESCRIPTION
+--------------------------------------------------------------------------------
+0             0x0             JPEG image data, JFIF standard 1.01
+20230         0x4F06          Zip archive data, at least v2.0 to extract, compressed size: 12, uncompressed size: 12, name: solution.txt
+20342         0x4F76          End of Zip archive
+```
+
+从偏移量为20230开始，隐藏了一个zip压缩包
+
+分离一下`dd if=attachment.jpg of=solution.zip skip=20230 bs=1`
+
+打开压缩包，有一个叫`solution.txt`的文件，打开就是答案
+
+
+
+## Training: Crypto - Caesar II
+
+```
+0B 33 33 28 20 2E 33 26 70 20 3D 33 39 20 37 33
+30 3A 29 28 20 33 32 29 20 31 33 36 29 20 27 2C
+25 30 30 29 32 2B 29 20 2D 32 20 3D 33 39 36 20
+2E 33 39 36 32 29 3D 72 20 18 2C 2D 37 20 33 32
+29 20 3B 25 37 20 2A 25 2D 36 30 3D 20 29 25 37
+3D 20 38 33 20 27 36 25 27 2F 72 20 1B 25 37 32
+6B 38 20 2D 38 03 20 75 76 7C 20 2F 29 3D 37 20
+2D 37 20 25 20 35 39 2D 38 29 20 37 31 25 30 30
+20 2F 29 3D 37 34 25 27 29 70 20 37 33 20 2D 38
+20 37 2C 33 39 30 28 32 6B 38 20 2C 25 3A 29 20
+38 25 2F 29 32 20 3D 33 39 20 38 33 33 20 30 33
+32 2B 20 38 33 20 28 29 27 36 3D 34 38 20 38 2C
+2D 37 20 31 29 37 37 25 2B 29 72 20 1B 29 30 30
+20 28 33 32 29 70 20 3D 33 39 36 20 37 33 30 39
+38 2D 33 32 20 2D 37 20 26 36 33 2B 36 36 32 26
+36 2A 2A 28 72
+```
+
+16进制转字符后，在ASCII码范围内解密，从中找到长得像答案的
+
+```
+Good\job,\you\solved\one\more\challenge\in\your\journey.\This\one\was\fairly\easy\to\crack.\Wasn't\it?\128\keys\is\a\quite\small\keyspace,\so\it\shouldn't\have\taken\you\too\long\to\decrypt\this\message.\Well\done,\your\solution\is\brogrrnbrffd.
+```
