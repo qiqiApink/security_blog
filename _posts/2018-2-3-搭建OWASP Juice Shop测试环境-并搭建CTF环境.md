@@ -5,7 +5,7 @@ subtitle: 一个Web漏洞测试环境，包含了最常见的10大漏洞
 date: 2018-2-3
 author: Qiqi
 header-img: img/tag-bg-o.jpg
-catlog: true
+catalog: true
 tag:
    - Mac
    - Web安全
