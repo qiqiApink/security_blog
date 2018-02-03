@@ -9,6 +9,7 @@ catalog: true
 tag:
    - write up
    - Web安全
+   - CTF
 ---
 
 # We Chall WriteUp
