@@ -52,7 +52,7 @@ npm start
 
 ## 为Juice Shop设立CTFd
 
-Juice Shop提供 [了方便的`juice-shop-ctf-cli`工具](https://github.com/bkimminich/juice-shop-ctf) 来简化使用开源[CTFd](https://ctfd.io/)框架的CTF的托管 
+Juice Shop提供了[方便的`juice-shop-ctf-cli`工具](https://github.com/bkimminich/juice-shop-ctf) 来简化使用开源[CTFd](https://ctfd.io/)框架的CTF的托管 
 
 ### 用C＃生成CTFd挑战 juice-shop-ctf-cli
 
