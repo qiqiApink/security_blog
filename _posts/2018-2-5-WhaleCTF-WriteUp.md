@@ -4,7 +4,7 @@ title: WhaleCTF WriteUp
 date: 2018-2-5
 author: Qiqi
 header-img: img/images-1.jpg
-catalog:true
+catalog: true
 tag:
    - Web安全
    - write up
