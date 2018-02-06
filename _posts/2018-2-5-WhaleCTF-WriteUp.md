@@ -393,6 +393,31 @@ print flag
 
 所以flag是key{yahkr}
 
+### 密钥生成
+
+利用拓欧算法写个python脚本：
+
+```Python
+def ext_euclid ( a , b ):
+     if (b == 0):
+         return 1, 0, a
+     else:
+         x , y , q = ext_euclid( b , a % b )
+         x , y = y, ( x - (a / b) * y )
+         return x, y, q
+         
+p=473398607161
+q=4511491
+e = 17
+fn = (p - 1) * (q - 1)
+x, y, q = ext_euclid(fn, e)
+print y
+```
+
+输出：125631357777427553
+
+所以flag是key{125631357777427553}
+
 ### 栅栏密码
 
 提示：第一根和第二根都被换了位置····只有第三根还能站在那，缺也短了一截了
