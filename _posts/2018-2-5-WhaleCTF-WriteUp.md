@@ -6,7 +6,6 @@ author: Qiqi
 header-img: img/images-1.jpg
 catalog: true
 tag:
-   - Web安全
    - write up
    - CTF
 ---
@@ -569,3 +568,13 @@ base64wtfwtf123
 ```
 
 所以最终的flag就是flag{base64wtfwtf123}
+
+### RSA专家
+
+打开压缩包，发现两个文件，用notepad++打开，有两个文件，一个是endata，另一个是aaaa，发现endata应该是一个加密文件，aaaa打开是私钥，而又根据题目名称，推断endata应该是RSA加密的，所以我们使用openssl来解密
+
+```
+qiqi@qiqi-Mac ~/Desktop> openssl rsautl -decrypt -in endata -inkey aaaa -out flag.txt
+```
+
+打开flag.txt得到flag：key{c42bcf773d54cf03}
