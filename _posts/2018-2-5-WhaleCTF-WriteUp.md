@@ -376,7 +376,7 @@ base64解码得到catch_the_dynamic_flag_is_quite_simple，所以flag就是key{c
 
 写个python脚本
 
-```Python
+```python
 str_bin = raw_input("str_bin:")
 str_key = raw_input("str_key:")
 list_bin = []
@@ -396,7 +396,7 @@ print flag
 
 利用拓欧算法写个python脚本：
 
-```Python
+```python
 def ext_euclid ( a , b ):
      if (b == 0):
          return 1, 0, a
@@ -451,7 +451,7 @@ VE	NU	SI	SA	FA	IR	CO	MP	AN	YX
 
 我们也可以用python脚本
 
-```Python
+```python
 #coding:utf-8
 
 str_1 = raw_input("input the 25 letters: ") # 25位，写成5*5的密码表
