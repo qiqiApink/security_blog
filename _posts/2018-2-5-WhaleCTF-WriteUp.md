@@ -417,6 +417,131 @@ print y
 
 所以flag是key{125631357777427553}
 
+### 规则很公平
+
+根据提示：**公平**
+
+想到了**波雷费密码**（英语：**Playfair cipher**）
+
+本题密码标如下：
+
+C	U	L	T	R
+
+E	A	B	D	F
+
+G	H	I	K	M
+
+N	O	P	Q	S
+
+V	W	X	Y	Z
+
+密文：CGOCPMOFEBMLUNISEOZY
+
+两两一组：
+
+CG	OC	PM	OF	EB	ML	UN	IS	EO	ZY
+
+解密：
+
+VE	NU	SI	SA	FA	IR	CO	MP	AN	YX
+
+可以看出最后的X是补加的，所以我们要把它去掉
+
+所以flag就是：key{VENUSISAFAIRCOMPANY}
+
+我们也可以用python脚本
+
+```Python
+#coding:utf-8
+
+str_1 = raw_input("input the 25 letters: ") # 25位，写成5*5的密码表
+str_2 = ""
+str_3 = ""
+str_4 = "abcdefghiklmnopqrstuvwxyz" #去掉 j 因为ij在一起
+str_5 = ""
+str_6 = raw_input("input the rule: ") #要解密的规则  两两分组
+list_1 = []
+str_7 = ""
+
+def zhongheng(abc, adc):
+    a = 0
+    x1 = ""
+    y1= ''
+    x2 = ""
+    y2 = ""
+    for i in list_1:
+        i = list(i)
+        if abc in i:
+            x1 = a
+            y1 = i.index(abc)
+
+        else:
+            pass
+        if adc in i:
+            x2 = a
+            y2 = i.index(adc)
+        else:
+            pass
+        a += 1
+    print x1, y1, x2, y2
+
+    if x1 == x2:
+        if y1 == 0 and y2 == 0:
+            return str(list_1[x1][4]) + str(list_1[x2][4])
+        if y1 == 0 and y2 != 0:
+            return str(list_1[x1][4]) + str(list_1[x2][y2 - 1])
+        if y1 != 0 and y2 == 0:
+            return str(list_1[x1][y1 - 1]) + str(list_1[x2][4])
+        else:
+            return str(list_1[x1][y1 - 1]) + str(list_1[x2][y2 - 1])
+
+    if y1 == y2:
+        if x1 == 0 and x2 == 0:
+            return str(list_1[4][y2]) + str(list_1[4][y2])
+        if x1 == 0 and x2 != 0:
+            return str(list_1[4][y1]) + str(list_1[x2 - 1][y2])
+        if x1 != 0 and x2 == 0:
+            return str(list_1[x1 - 1][y1])+ str(list_1[4][y2])
+        else:
+            return str(list_1[x1 - 1][y1]) + str(list_1[x2 - 1][y2])
+
+    aaie = str(list_1[x1][y2]) + str(list_1[x2][y1])
+    return aaie
+
+
+#去除空格
+for i in str_1:
+    str_2 += i.strip(" ")
+
+#去掉重复和j
+for i in str_2:
+    if i in str_3:
+        pass
+    elif i == "j":
+        pass
+    else:
+        str_3 += i
+
+#填完密钥出现的字母后，若还有空余，就填字母表中剩余的字母（按字母表顺序）
+for i in str_4:
+    if i in str_3:
+        pass
+    else:
+        str_5 += i
+str_3 += str_5
+
+flag = ""
+
+#分为 5x5 的数组
+for i in range(5):
+    list_1.append(str_3[i * 5 : i * 5 + 5])
+
+for i in range(0, len(str_6), 2):
+    flag += zhongheng(str(str_6[i]), str(str_6[i+1]))
+print "flag: " + flag
+```
+跑一下，也能得到相同的结果
+
 ### 栅栏密码
 
 提示：第一根和第二根都被换了位置····只有第三根还能站在那，缺也短了一截了
@@ -486,6 +611,16 @@ key{BNdE} a74be8e20b51bd528d46681a19bb8560
 ```
 
 flag就是key{BNdE}
+
+### RSA专家
+
+打开压缩包，发现两个文件，用notepad++打开，有两个文件，一个是endata，另一个是aaaa，发现endata应该是一个加密文件，aaaa打开是私钥，而又根据题目名称，推断endata应该是RSA加密的，所以我们使用openssl来解密
+
+```
+qiqi@qiqi-Mac ~/Desktop> openssl rsautl -decrypt -in endata -inkey aaaa -out flag.txt
+```
+
+打开flag.txt得到flag：key{c42bcf773d54cf03}
 
 ## 杂项
 
@@ -568,13 +703,3 @@ base64wtfwtf123
 ```
 
 所以最终的flag就是flag{base64wtfwtf123}
-
-### RSA专家
-
-打开压缩包，发现两个文件，用notepad++打开，有两个文件，一个是endata，另一个是aaaa，发现endata应该是一个加密文件，aaaa打开是私钥，而又根据题目名称，推断endata应该是RSA加密的，所以我们使用openssl来解密
-
-```
-qiqi@qiqi-Mac ~/Desktop> openssl rsautl -decrypt -in endata -inkey aaaa -out flag.txt
-```
-
-打开flag.txt得到flag：key{c42bcf773d54cf03}
