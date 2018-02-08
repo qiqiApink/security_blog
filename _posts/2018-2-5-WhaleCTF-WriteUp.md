@@ -84,7 +84,7 @@ XPATH syntax error: '~flag'
 
 提交得到
 
-```Sql
+```sql
 XPATH syntax error: '~abcd1234'
 ```
 
