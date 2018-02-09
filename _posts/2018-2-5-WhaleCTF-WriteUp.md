@@ -449,7 +449,15 @@ VE	NU	SI	SA	FA	IR	CO	MP	AN	YX
 
 所以flag就是：key{VENUSISAFAIRCOMPANY}
 
-我们也可以用python脚本
+我们也可以使用python第三方库pycipher中的Playfair来解密
+
+```python
+>>> from pycipher import Playfair
+>>> Playfair('ZKLIPOAGSUMDWFHCBVTRYENXQ').decipher('FMGKYBXTSFBNCQDSPT')
+'WHALECTFISVERYFAIR'
+```
+
+我们也可以自己写一个python脚本
 
 ```python
 #coding:utf-8
