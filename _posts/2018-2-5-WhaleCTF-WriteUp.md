@@ -750,7 +750,7 @@ print s
 
 抱着侥幸心理，猜想脚本里的flag说不定就是我们要的flag，于是拿去试一下，发现还真的是对的
 
-Key{venuscryptoissimpletodecrypt}
+key{venuscryptoissimpletodecrypt}
 
 ### RSA专家
 
