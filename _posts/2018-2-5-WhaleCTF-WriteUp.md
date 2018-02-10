@@ -682,6 +682,76 @@ key{BNdE} a74be8e20b51bd528d46681a19bb8560
 
 flag就是key{BNdE}
 
+### RSA破解
+
+使用openssl解析公钥文件得到模数和公钥
+
+```
+qiqi@qiqi-Mac ~/Desktop> openssl rsa -pubin -text -modulus -in public.pem
+Modulus (256 bit):
+    00:a4:10:06:de:fd:37:8b:73:95:b4:e2:eb:1e:c9:
+    bf:56:a6:1c:d9:c3:b5:a0:a7:35:28:52:1e:eb:2f:
+    b8:17:a7
+Exponent: 65537 (0x10001)
+Modulus=A41006DEFD378B7395B4E2EB1EC9BF56A61CD9C3B5A0A73528521EEB2FB817A7
+writing RSA key
+-----BEGIN PUBLIC KEY-----
+MDwwDQYJKoZIhvcNAQEBBQADKwAwKAIhAKQQBt79N4tzlbTi6x7Jv1amHNnDtaCn
+NShSHusvuBenAgMBAAE=
+-----END PUBLIC KEY-----
+```
+
+公钥：`65537 (0x10001)`
+
+模数：`A41006DEFD378B7395B4E2EB1EC9BF56A61CD9C3B5A0A73528521EEB2FB817A7`
+
+将模数转为十进制：`74207624142945242263057035287110983967646020057307828709587969646701361764263`
+
+使用[在线工具](http://factordb.com/)分解：
+
+p = ` 258631601377848992211685134376492365269`
+
+q = `286924040788547268861394901519826758027`
+
+写个python脚本来解密：
+
+```python
+import gmpy2
+
+p = 258631601377848992211685134376492365269
+q = 286924040788547268861394901519826758027
+e = 65537
+
+f = int(open('flag.enc', 'rb').read().encode('hex'), 16)
+print f
+n = p * q
+fn = (p - 1) * (q - 1)
+d = gmpy2.invert(e, fn)
+h = hex(gmpy2.powmod(f, d, n))[2:]
+if len(h)%2 == 1:
+    h = '0' + h
+s = h.decode('hex')
+print s
+```
+
+运行一下得到flag：`ISG{256bit_is_weak}`
+
+### 算法问题
+
+说实话，不知道这题干嘛的
+
+解压得到一个py脚本和一个txt文件
+
+打开txt文件，里面是一串数字
+
+再打开py脚本，看到了flag，很诧异，往下看，发现是个加密算法
+
+于是，先试着运行了一下，输出了一串数字，很眼熟，不就是txt文件里的那串数字嘛
+
+抱着侥幸心理，猜想脚本里的flag说不定就是我们要的flag，于是拿去试一下，发现还真的是对的
+
+Key{venuscryptoissimpletodecrypt}
+
 ### RSA专家
 
 打开压缩包，发现两个文件，用notepad++打开，有两个文件，一个是endata，另一个是aaaa，发现endata应该是一个加密文件，aaaa打开是私钥，而又根据题目名称，推断endata应该是RSA加密的，所以我们使用openssl来解密
