@@ -452,6 +452,12 @@ pic.save("flag.png")
 
 最终的flag是flag{FLAGISHELPMEOUTPLEASE}
 
+### 先有什么
+
+这题发现每段字符串的字符在键盘上的位置都很接近，然后发现，每段字符串都会在键盘上包围住一个字母，按顺序读一下得到vanusectf
+
+所以flag就是key{venusectf}
+
 ### 检查符号
 
 摩斯电码的变形
