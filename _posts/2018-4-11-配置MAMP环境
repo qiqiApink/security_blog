@@ -1,0 +1,114 @@
+---
+layout: post
+title: MAMP环境搭建与使用
+author: Qiqi
+date: 2018-4-11
+header-img: img/post-bg-blog.jpg
+catalog: true
+tag:
+   - MAMP
+   - Mac
+   - MySQL
+---
+
+# MAMP环境搭建和使用
+
+> 环境：MacOS、MAMP
+
+最近学长让我们看看MVC，但因为自己太菜不会写，就从github上下载了别人的源码，想先看看人家的能否实现，然后再仔细研究一下人家的代码
+
+然而，自己编译php的时候，因为报错的问题，很多拓展没有安装，导致很多东西不能用，十分麻烦，像这次的`pdo_mysql`，导致数据库无法连接，要安装的话，还得重新编译，很是麻烦
+
+然后想起来之前自己下载过MAMP，就想拿出来试试
+
+暂时没钱买pro，只好用免费版的
+
+## 0x01 使用
+
+进入界面后，点击`Preferences`，然后
+
+![](https://upload-images.jianshu.io/upload_images/1486247-a0494912f56510e4.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/700)
+
+接着`sudo apachectl stop`关闭系统apache，`sudo mysql.server stop`关闭系统mysql
+
+然后点击界面中的`Start Servers`，成功启动
+
+![](https://upload-images.jianshu.io/upload_images/1486247-830269dde2be33f0.jpeg?imageMogr2/auto-orient/strip%7CimageView2/2/w/700)
+
+这时候，在浏览器中输入`127.0.0.1`或者`localhost` 将会显示一个带有大象的页面。代表服务器已启动成功，并且把`htdocs`文件夹下的`index.php`显示了出来
+
+![](https://ws1.sinaimg.cn/large/006Vib6xly1fq8o2kpqrpj30xy0m1n59.jpg)
+
+## 0x02 服务器路径
+
+在应用程序中找到MAMP，有一个`htdocs`文件夹，这就是服务器的根目录`DocumentRoot`
+
+你可以通过`127.0.0.1`或者`localhost`来访问你的文件或者网页了
+
+## 0x03 在命令行中操作MySQL
+
+点击`index.php`页面上的工具下拉栏中的`phpMyAdmin`选项，就可以配置数据库信息了，但是不如命令行来的方便（其实是我不会用，也懒得查～）
+
+在命令行中输入
+
+```
+qiqi@qiqi-Mac ~> /Applications/MAMP/Library/bin/mysql -uroot -p
+```
+
+回车后输入密码，就可以正常使用MySQL命令了
+
+## 0x04 修改MySQL root密码
+
+之前说到，使用命令行操作数据库，需要输入`root`用户的密码，我在这里犯了一个很智障的错误，我当时没有想起来密码是`root`，我去phpMyAdmin里找密码
+
+![](https://ws1.sinaimg.cn/large/006Vib6xly1fq8x6p4x0zj30j9046my8.jpg)
+
+上面显示`password`是`Yes`，我就天真的以为密码就是`Yes`（MDZZ）
+
+然后怎么输入都不对（当然了～，呵呵）
+
+然后我就去修改了一下密码，然后就尴尬了，显示已成功修改密码，但紧接着页面就出现一个红框，显示无法连接，和懵逼
+
+一查才知道此时的MAMP并不知道你的Mysql root密码
+
+下面我们就来讲讲如何更新密码配置
+
+很多文章都会讲让你修改`/Applications/MAMP/bin/mamp/index.php`中这样一行
+
+```
+$link =mysql_connect(':/Application/MAMP/tmp/mysql/mysql.sock',‘root','root');
+```
+
+把第二个`root`改为新密码，但是我在修改的时候发现新版本的MAMP在此文件中已经变成
+
+```
+$user = '<?php echo $cfg['Servers'][1]['user']; ?>';
+$password = '<?php echo $cfg['Servers'][1]['password']; ?>';
+$db = 'inventory';
+$socket = 'localhost:/Applications/MAMP/tmp/mysql/mysql.sock';
+
+$link = mysql_connect(
+   $socket,
+   $user,
+   $password
+);
+```
+
+所以这个文件已经不需要修改了
+
+我们只需要修改
+
+```
+/Applications/MAMP/bin/phpMyAdmin/config.inc.php
+/Applications/MAMP/bin/checkMysql.sh
+/Applications/MAMP/bin/quickCheckMysqlUpgarde.sh
+/Applications/MAMP/bin/repairMysql.sh
+/Applications/MAMP/bin/stopMysql.sh
+/Applications/MAMP/bin/upgardeMysql.sh
+```
+
+这六个文件中的`-proot`为`-p+新密码`即可
+
+我们再去网页刷新一下，发现能正常打开了，同时命令行也能顺利登入
+
+如此我们便可以方便的使用了，如果是专业版的话，我们可以使用各种版本的php来进行测试
