@@ -16,11 +16,11 @@ tag:
 
 > 环境：ubuntu LTS 16.04
 
-#### 安装apache2
+### 安装apache2
 
 `sudo apt-get install -y apache2`
 
-#### 安装mysql
+### 安装mysql
 
 ubuntu16.04自带mysql5.7
 
@@ -28,9 +28,9 @@ ubuntu16.04自带mysql5.7
 sudo apt instal -y mysql-server mysql-client libmysqlclient-dev mysql-workbench
 ```
 
-#### 安装多版本php
+### 安装多版本php
 
-##### 安装php5.6
+#### 安装php5.6
 
 ```
 sudo add-apt-repository ppa:ondrej/php
@@ -38,19 +38,19 @@ sudo apt-get update
 sudo apt-get install -y php5.6-common php5.6-mbstring php5.6-mcrypt php5.6-mysql php5.6-xml php5.6-gd php5.6-curl php5.6-json php5.6-fpm php5.6-zip php5.6-mcrypt libapache2-mod-php5.6
 ```
 
-##### 安装php7.0
+#### 安装php7.0
 
 ```
 sudo apt-get install -y php7.0-common php7.0-mbstring php7.0-mcrypt php7.0-mysql php7.0-xml php7.0-gd php7.0-curl php7.0-json php7.0-fpm php7.0-zip php7.0-mcrypt libapache2-mod-php7.0
 ```
 
-##### 安装php7.1
+#### 安装php7.1
 
 ```
 sudo apt-get install -y php7.1-common php7.1-mbstring php7.1-mcrypt php7.1-mysql php7.1-xml php7.1-gd php7.1-curl php7.1-json php7.1-fpm php7.1-zip php7.1-mcrypt libapache2-mod-php7.1
 ```
 
-##### 开启重写转向
+#### 开启重写转向
 
 ```
 sudo a2enmod rewrite
@@ -59,7 +59,7 @@ sudo a2enmod headers
 
 然后我们重启一下apache2`sudo service apache2 restart`
 
-##### 自定义命令切换php版本
+#### 自定义命令切换php版本
 
 编辑`.bashrc`，加入自定义命令，方便不同版本的php切换
 
