@@ -48,11 +48,11 @@ npm start
 
 以启动应用程序
 
-浏览到[http：// localhost：3000](http://localhost:3000/)，如果能正常访问到OWASP Juice Shop的页面，那么恭喜你，安装成功了
+浏览到[http://localhost:3000](http://localhost:3000/)，如果能正常访问到OWASP Juice Shop的页面，那么恭喜你，安装成功了
 
 ## 为Juice Shop设立CTFd
 
-Juice Shop提供 [了方便的`juice-shop-ctf-cli`工具](https://github.com/bkimminich/juice-shop-ctf) 来简化使用开源[CTFd](https://ctfd.io/)框架的CTF的托管 
+Juice Shop提供了[方便的`juice-shop-ctf-cli`工具](https://github.com/bkimminich/juice-shop-ctf) 来简化使用开源[CTFd](https://ctfd.io/)框架的CTF的托管 
 
 ### 用C＃生成CTFd挑战 juice-shop-ctf-cli
 
@@ -132,7 +132,7 @@ sudo python serve.py #运行程序
 
 这里可能需要用python3来运行（总之，我用python2安装dataset库的时候，一直出错，没找到解决办法）
 
-浏览到http://localhost:4000，如果运行成功的话，应该是管理员账号注册的界面
+浏览到[http://localhost:4000](http://localhost:4000/)，如果运行成功的话，应该是管理员账号注册的界面
 
 我们创建一个管理员账号，并给CTF起个名字
 
