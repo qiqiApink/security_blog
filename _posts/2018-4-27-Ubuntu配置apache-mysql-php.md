@@ -8,8 +8,8 @@ catalog: true
 tag:
    - Ubuntu
    - Apache
-   - mysql
-   - php
+   - MySQL
+   - PHP
 ---
 
 # Ubuntu 配置apache+mysql+多版本php
