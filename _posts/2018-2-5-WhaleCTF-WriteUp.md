@@ -6,7 +6,7 @@ author: Qiqi
 header-img: img/images-1.jpg
 catalog: true
 tag:
-   - write up
+   - Writeup
    - CTF
 ---
 
