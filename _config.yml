@@ -94,10 +94,46 @@ service-worker: true
 # Friends
 friends: [
     {
-        title: "Apple",
-        href: "https://apple.com"
+        title: "Quincy's Blog",
+        href: "http://quincyblog.top/"
     },{
-        title: "Apple Developer",
-        href: "https://developer.apple.com/"
+        title: "Double--R's Blog",
+        href: "https://doubler12138.github.io/"
+    },{
+        title: "Flight's Blog",
+        href: "https://ox1234.github.io/"
+    },{
+        title: "fa1con's Blog",
+        href: "https://fa1conn.github.io/"
+    },{
+        title: "pupiles's Blog",
+        href: "http://pupiles.com/"
+    },{
+        title: "f1sh's Blog",
+        href: "http://f1sh.site/"
+    },{
+        title: "k0rz3n's Blog",
+        href: "http://www.k0rz3n.com/"
+    },{
+        title: "math1as's Blog",
+        href: "http://math1as.com/"
+    },{
+        title: "Ph1thon's Blog",
+        href: "https://www.leavesongs.com/"
+    },{
+        title: "L3m0n's Blog",
+        href: "http://www.cnblogs.com/iamstudy/"
+    },{
+        title: "notwo1f's Blog",
+        href: "http://notwo1f.tk/"
+    },{
+        title: "Silver's Blog",
+        href: "https://blog.iret.xyz/"
+    },{
+        title: "Klaus's Blog",
+        href: "http://klaus.link/"
+    },{
+        title: "L-Team's Blog",
+        href: "http://l-team.org/"
     }
 ]

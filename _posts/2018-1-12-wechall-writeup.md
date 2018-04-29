@@ -7,7 +7,7 @@ catlog: true
 header-img: img/write-up.png
 catalog: true
 tag:
-   - write up
+   - Writeup
    - Web安全
    - CTF
 ---
