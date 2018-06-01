@@ -3,7 +3,7 @@ layout: post
 title: 南邮攻防训练平台Writeup
 data: 2018-6-1
 author: Qiqi
-header-img: img/
+header-img: img/post-bg-coffee.jpeg
 catalog: true
 tag:
    - CTF
