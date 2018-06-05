@@ -99,11 +99,33 @@
                         frameborder="0" scrolling="0" width="100px" height="20px"
                         src="https://ghbtns.com/github-btn.html?user={{ site.github_username }}&repo={{ site.github_username }}.github.io&type=star&count=true" >
                     </iframe>
+                    <br>
+                    您是本站第<span id="busuanzi_value_site_uv"></span>位小伙伴
+                    <br>
+                    <p class="copyright text-muted" id="count">
                 </p>
             </div>
         </div>
     </div>
 </footer>
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>
+  
+  window.setInterval('counter()',1000);
+  function counter(){
+    var date=new Date();
+    var startDate=new Date(2017,11,29,0,0,0);
+    var time=(date-startDate)/1000;
+    var day=Math.floor(time/(24*60*60));
+    var hour=Math.floor(time%(24*60*60)/(60*60));
+    var minute=Math.floor(time%(24*60*60)%(60*60)/60);
+    var second=Math.floor(time%(24*60*60)%(60*60)%60);
+    var str="我的博客已默默运行了" + day + "天" + hour +"时" + minute + "分" + second + "秒";
+    document.getElementById('count').innerHTML=str;
+  }
+</script>
 
 <!-- jQuery -->
 <script src="{{ "/js/jquery.min.js " | prepend: site.baseurl }}"></script>
