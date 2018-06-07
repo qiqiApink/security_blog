@@ -1307,7 +1307,7 @@ if f:
     while True:
         line = f.readline()
         if line:
-            line = line[:-1]
+            line = line.strip('\r\n')
             str += line
         else:
             break
