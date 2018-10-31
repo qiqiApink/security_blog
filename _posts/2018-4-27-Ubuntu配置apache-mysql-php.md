@@ -25,7 +25,7 @@ tag:
 ubuntu16.04自带mysql5.7
 
 ```
-sudo apt install -y mysql-server mysql-client libmysqlclient-dev mysql-workbench
+sudo apt install -y mysql-server mysql-client libmysqlclient-dev mysql-workbench --allow-unauthenticated
 ```
 
 ### 安装多版本php
