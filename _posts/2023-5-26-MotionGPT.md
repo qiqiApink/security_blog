@@ -8,3 +8,5 @@ catalog: true
 ---
 
 # MotionGPT: Finetuned LLMs are General-Purpose Motion Generators
+
+![pipeline](img/pipeline.svg)
