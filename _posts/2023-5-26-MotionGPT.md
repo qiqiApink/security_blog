@@ -9,4 +9,4 @@ catalog: true
 
 # MotionGPT: Finetuned LLMs are General-Purpose Motion Generators
 
-![pipeline](img/pipeline.svg)
+![pipeline](https://raw.githubusercontent.com/qiqiApink/qiqiApink.github.io/master/img/pipeline.svg)
