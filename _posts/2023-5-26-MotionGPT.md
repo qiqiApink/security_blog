@@ -5,9 +5,6 @@ author: Qiqi
 date: 2023-5-26
 header-img: img/post-bg-blog.jpg
 catalog: true
-tag:
-   - Crypto
-   - Writeup
 ---
 
 # MotionGPT: Finetuned LLMs are General-Purpose Motion Generators
