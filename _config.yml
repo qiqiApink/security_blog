@@ -5,7 +5,7 @@ email: qiqiapink@gmail.com
 header-img: img/home-bg-hacker.jpg
 description: "Too young too simple"
 keyword: "Qiqi, Qiqi Blog, 琪琪的博客"
-url: "http://qiqiapink.github.io"          # your host, for absolute URL
+url: "http://qiqiapink.github.io/security_blog"          # your host, for absolute URL
 baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
 github_repo: "https://github.com/qiqiApink/qiqiApink.github.io.git" # you code repository
 
